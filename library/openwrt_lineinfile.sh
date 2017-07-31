@@ -35,7 +35,7 @@ save_changes() {
 
 line_present() {
     local index old new mode tmp
-    
+
     [ -f "$path" ] && {
         old="$(cat "$path")" || fail "path $path not readable"
     } || {

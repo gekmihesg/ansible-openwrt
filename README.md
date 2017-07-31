@@ -38,7 +38,7 @@ Therefore it is recommended to install `coreutils-sha1sum` and `coreutils-base64
 Role Variables
 --------------
 
-    openwrt_install_recommended_packages: 
+    openwrt_install_recommended_packages:
         Checks for some commands and installs the corresponding packages if they are
         missing. See requirements above. (default: yes)
 

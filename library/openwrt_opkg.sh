@@ -52,7 +52,7 @@ main() {
         esac
         force=" --force-$force"
     }
-    
+
     [ -z "$update_cache" -o -n "$_ansible_check_mode" ] || try opkg update
     case "$state" in
         present|installed) install_packages;;

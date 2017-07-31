@@ -1,0 +1,25 @@
+---
+- name: setup wifi
+  nohup:
+    command: /sbin/wifi
+    delay: 1
+
+- name: reload wifi
+  nohup:
+    command: /sbin/wifi reload
+    delay: 1
+
+- name: restart network
+  nohup:
+    command: /etc/init.d/network restart
+    delay: 1
+
+- name: wait for connection
+  wait_for_connection:
+    timeout: "{{ openwrt_wait_for_connection_timeout }}"
+    delay: 5
+  when: openwrt_wait_for_connection
+  listen:
+    - setup wifi
+    - reload wifi
+    - restart network

@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Markus Weippert
+  description: Manage OpenWRT without python
+  issue_tracker_url: https://github.com/gekmihesg/ansible-openwrt/issues
+  license: GPL-3.0
+  min_ansible_version: 2.0
+  platforms:
+  - name: LEDE
+    versions:
+    - 17.01
+  - name: OpenWRT
+    versions:
+    - 15.05
+  galaxy_tags:
+  - busybox
+  - lede
+  - openwrt
+  - shell
+  - uci
+dependencies: []

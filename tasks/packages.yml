@@ -1,0 +1,40 @@
+---
+- name: check whether opkg caches need update
+  stat:
+    path: /tmp/opkg-lists
+  register: _opkg_lists
+
+- name: get current system time
+  command: date +%s
+  register: _epoch
+  check_mode: false
+  changed_when: false
+  when: _opkg_lists.stat.exists
+
+- name: update opkg cache
+  opkg:
+    name: opkg
+    update_cache: yes
+  register: _update
+  when: not _opkg_lists.stat.exists or
+      _epoch.stdout|int - _opkg_lists.stat.mtime > 86400
+  failed_when: not _opkg_lists.stat.exists and _update.failed
+  changed_when: not _update.failed
+
+- name: check for openssl
+  command: which openssl
+  register: _openssl
+  check_mode: false
+  changed_when: false
+  failed_when: false
+
+- include: package.yml
+  with_dict:
+    base64: coreutils-base64
+    md5sum: coreutils-md5sum
+    sha1sum: coreutils-sha1sum
+  when: _openssl.rc
+
+- name: avoid re-checking of packages
+  set_fact:
+    openwrt_install_recommended_packages: false

@@ -40,8 +40,8 @@ sysctl_write() {
                 found="1"
                 [ "$state" = "present" ] || { changed; continue; }
                 v="${1#*=}"
-                while [ $# -gt 1 ]; do
-                    shift; [ "${1:0:1}" != "#" ] || break; v="$v $1"
+                shift; while [ $# -ge 1 ]; do
+                    [ "${1:0:1}" != "#" ] || break; v="$v $1"; shift
                 done
                 [ "$v" = "$value" ] || {
                     line="$k=$value${1:+ $*}"

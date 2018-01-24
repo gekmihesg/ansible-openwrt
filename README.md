@@ -107,7 +107,7 @@ Example Playbook
         - name: commit changes
           uci:
             command: commit
-          notify: restart wifi
+          notify: reload wifi
 
 
 Running the modules outside of a playbook is possible like this:

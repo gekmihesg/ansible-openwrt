@@ -10,5 +10,5 @@
   tags: always
 
 - name: install recommended packages
-  include: packages.yml
+  import_tasks: packages.yml
   when: openwrt_install_recommended_packages

@@ -27,8 +27,10 @@ def _configure_module(self, module_name, module_args, task_vars=None):
     (module_style, module_shebang, module_data, module_path) = \
             self.__configure_module(module_name, module_args, task_vars)
     if openwrt_module:
-        with open(_wrapper_file, 'rb') as f:
+        with open(_wrapper_file, 'r') as f:
             wrapper_data = f.read()
+        if type(module_data) is bytes:
+            module_data = module_data.decode()
         module_data = wrapper_data.replace('\n. "$_script"\n', '\n' + module_data + '\n')
         _fix_module_args(module_args)
     return (module_style, module_shebang, module_data, module_path)

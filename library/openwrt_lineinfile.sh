@@ -51,7 +51,8 @@ line_present() {
         [ -z "$backrefs" ] || line="$(echo "$tmp" |
             sed -re "s/$line_match/$(escape_slash "$line")/")"
         [ "$tmp" = "$line" ] || {
-            new="$(echo "$old" | sed "${index}c $(escape_chars "$line")")"
+            new="$(echo "$old" | sed "${index}c $(escape_chars "$line" |
+                    sed 's|^\s|\\&|;q')")"
             changed
         }
     } || [ -n "$backrefs" ] || {
@@ -63,7 +64,8 @@ line_present() {
             mode="i"
         }
         [ -n "$index" ] && {
-            new="$(echo "$old" | sed "$index$mode $(escape_chars "$line")")"
+            new="$(echo "$old" | sed "$index$mode $(escape_chars "$line" |
+                    sed 's|^\s|\\&|;q')")"
         } || {
             [ "$insertafter" = "BOF" -o "$insertbefore" = "BOF" ] &&
                 new="$line$N$old" || {

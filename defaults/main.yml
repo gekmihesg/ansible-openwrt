@@ -1,4 +1,6 @@
 ---
+ansible_remote_tmp: "/tmp/ansible"  # Reduce flash wear on target device
+
 openwrt_install_recommended_packages: yes
 
 openwrt_wait_for_connection: yes

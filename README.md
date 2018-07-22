@@ -53,6 +53,25 @@ Role Variables
 Example Playbook
 ----------------
 
+Inventory:
+
+    [aps]
+    ap1.example.com
+    ap2.example.com
+    ap3.example.com
+
+    [routers]
+    router1.example.com
+
+    [openwrt:children]
+    aps
+    routers
+
+    [openwrt:vars]
+    ansible_remote_tmp=/tmp/ansible  # Reduce flash wear on target device
+
+Playbook:
+
     - hosts: openwrt
       roles:
         - gekmihesg.openwrt
@@ -63,6 +82,10 @@ Example Playbook
         - name: start sysupgrade
           nohup:
             command: sysupgrade -q /tmp/sysupgrade.bin
+        - name: wait for reboot
+          wait_for_connection:
+            timeout: 300
+            delay: 60
         - name: install mdns
           opkg:
             name: mdns
@@ -72,10 +95,6 @@ Example Playbook
             name: mdns
             state: started
             enabled: yes
-        - name: wait for reboot
-          wait_for_connection:
-            timeout: 300
-            delay: 60
         - name: copy authorized keys
           copy:
             src: authorized_keys

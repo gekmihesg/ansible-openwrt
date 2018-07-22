@@ -1,14 +1,16 @@
 ---
 - name: pin defaults
-  set_fact: "{{item.key}}={{item.value}}"
-  with_dict:
+  set_fact:
     openwrt_ssh: "{{openwrt_ssh}}"
     openwrt_scp: "{{openwrt_scp}}"
     openwrt_ssh_user: "{{openwrt_ssh_user}}"
     openwrt_ssh_host: "{{openwrt_ssh_host}}"
     openwrt_user_host: "{{openwrt_ssh_user|quote}}@{{openwrt_ssh_host|quote}}"
+  when: "'openwrt' in group_names"
   tags: always
 
 - name: install recommended packages
   import_tasks: packages.yml
-  when: openwrt_install_recommended_packages
+  when:
+    - "'openwrt' in group_names"
+    - openwrt_install_recommended_packages

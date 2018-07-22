@@ -3,22 +3,27 @@
   nohup:
     command: /sbin/wifi
     delay: 1
+  when: "'openwrt' in group_names"
 
 - name: reload wifi
   nohup:
     command: /sbin/wifi reload
     delay: 1
+  when: "'openwrt' in group_names"
 
 - name: restart network
   nohup:
     command: /etc/init.d/network restart
     delay: 1
+  when: "'openwrt' in group_names"
 
 - name: wait for connection
   wait_for_connection:
     timeout: "{{ openwrt_wait_for_connection_timeout }}"
     delay: 5
-  when: openwrt_wait_for_connection
+  when:
+    - "'openwrt' in group_names"
+    - openwrt_wait_for_connection
   listen:
     - setup wifi
     - reload wifi

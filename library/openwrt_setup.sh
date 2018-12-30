@@ -33,6 +33,7 @@ main() {
     dist_major="${dist_version%%.*}"
     json_set_namespace facts
     json_init
+    json_add_string ansible_hostname "$(cat /proc/sys/kernel/hostname)"
     json_add_string ansible_distribution "$dist"
     json_add_string ansible_distribution_major_version "$dist_major"
     json_add_string ansible_distribution_release "$dist_release"

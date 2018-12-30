@@ -5,9 +5,10 @@
 NO_EXIT_JSON="1"
 
 add_ubus_fact() {
-    a=$(echo $1 | tr '/' '!')
+    local a=$(echo "$1" | tr '/' '!')
     set -- ${a//!/ }
-    local json="$($ubus call "$2" "$3" 2>/dev/null)" || return
+    ubus list "$2" > /dev/null 2>&1 || return
+    local json="$($ubus call "$2" "$3" 2>/dev/null)"
     echo -n "$seperator\"$1\":$json"
     seperator=","
 }

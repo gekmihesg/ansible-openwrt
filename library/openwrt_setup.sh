@@ -5,8 +5,7 @@
 NO_EXIT_JSON="1"
 
 add_ubus_fact() {
-    local a=$(echo "$1" | tr '/' '!')
-    set -- ${a//!/ }
+    set -- ${1//!/ }
     ubus list "$2" > /dev/null 2>&1 || return
     local json="$($ubus call "$2" "$3" 2>/dev/null)"
     echo -n "$seperator\"$1\":$json"
@@ -44,11 +43,11 @@ main() {
     json_set_namespace result
     echo "${dist_facts%\}*}"
     for fact in \
-            info/system/info \
-            devices/network.device/status \
-            services/service/list \
-            board/system/board \
-            wireless/network.wireless/status \
+            info!system!info \
+            devices!network.device!status \
+            services!service!list \
+            board!system!board \
+            wireless!network.wireless!status \
             ; do
         add_ubus_fact "openwrt_$fact"
     done
@@ -56,7 +55,7 @@ main() {
     seperator=""
     for net in $($ubus list); do
         [ "${net#network.interface.}" = "$net" ] ||
-            add_ubus_fact "${net##*.}/$net/status"
+            add_ubus_fact "${net##*.}!$net!status"
     done
     echo '}}}'
 }

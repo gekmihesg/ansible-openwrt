@@ -27,7 +27,6 @@ init() {
         fail "could not create state path"
     uci="/sbin/uci${state_path:+ -P '${state_path//'/'\\''}'}"
     changes="$(uci_change_hash)"
-    [ -z "$_ansible_diff" ] || set_diff "$(uci export)"
     case "$_type_keep_keys" in
         object) fail "keep_keys must be list or string";;
         array) json_get_values keep_keys "$_keep_keys" || :;;
@@ -313,7 +312,11 @@ cleanup() {
             json_set_namespace params
         }
     }
-    [ -z "$_ansible_diff" ] || set_diff "" "$(uci export)"
+    [ -z "$_ansible_diff" ] || {
+        local diff="$(uci changes)"
+        set_diff "$(echo "$diff" | sed -n 's/^-//p')" \
+            "$(echo "$diff" | grep -v ^-)"
+    }
     [ -z "$_ansible_check_mode" -o -z "$state_path" -o ! -d "$state_path" ] ||
         rm -rf "$state_path"
 }

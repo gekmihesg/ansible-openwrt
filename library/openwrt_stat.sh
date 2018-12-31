@@ -12,7 +12,7 @@ PARAMS="
 RESPONSE_VARS="
     charset/str
     checksum/str
-    ctime/float
+    ctime/int
     dev/int
     executable/bool
     exists/bool
@@ -32,7 +32,7 @@ RESPONSE_VARS="
     md5/str
     mime_type/str
     mode/str
-    mtime/float
+    mtime/int
     nlink/int
     pw_name/str
     readable/bool

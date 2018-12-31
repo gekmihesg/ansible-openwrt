@@ -5,8 +5,9 @@
 NO_EXIT_JSON="1"
 
 add_ubus_fact() {
-    set -- ${1//\// }
-    local json="$($ubus call "$2" "$3" 2>/dev/null)" || return
+    set -- ${1//!/ }
+    ubus list "$2" > /dev/null 2>&1 || return
+    local json="$($ubus call "$2" "$3" 2>/dev/null)"
     echo -n "$seperator\"$1\":$json"
     seperator=","
 }
@@ -31,6 +32,7 @@ main() {
     dist_major="${dist_version%%.*}"
     json_set_namespace facts
     json_init
+    json_add_string ansible_hostname "$(cat /proc/sys/kernel/hostname)"
     json_add_string ansible_distribution "$dist"
     json_add_string ansible_distribution_major_version "$dist_major"
     json_add_string ansible_distribution_release "$dist_release"
@@ -41,11 +43,11 @@ main() {
     json_set_namespace result
     echo "${dist_facts%\}*}"
     for fact in \
-            info/system/info \
-            devices/network.device/status \
-            services/service/list \
-            board/system/board \
-            wireless/network.wireless/status \
+            info!system!info \
+            devices!network.device!status \
+            services!service!list \
+            board!system!board \
+            wireless!network.wireless!status \
             ; do
         add_ubus_fact "openwrt_$fact"
     done
@@ -53,7 +55,7 @@ main() {
     seperator=""
     for net in $($ubus list); do
         [ "${net#network.interface.}" = "$net" ] ||
-            add_ubus_fact "${net##*.}/$net/status"
+            add_ubus_fact "${net##*.}!$net!status"
     done
     echo '}}}'
 }

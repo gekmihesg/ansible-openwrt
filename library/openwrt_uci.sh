@@ -81,14 +81,16 @@ uci_compare_list() {
 }
 
 uci_add() {
-    type="${type:-$value}"
+    section="${section:-$value}"
+    [ -n "$name" -o -z "$type" ] || name="$section"
+    type="${type:-$section}"
     [ -n "$type" ] || fail "type required for $command"
     [ -n "$name" ] && {
         uci_check_type "$config.$name" "$type" || {
             try uci add "$config" "$type"
             try uci rename "$config.$_result=$name"
         }
-    } || try uci add "$key" "$type"
+    } || try uci add "$config" "$type"
 }
 
 uci_set_list() {
@@ -214,6 +216,7 @@ uci_find() {
 
 uci_ensure() {
     local keys i c v k t
+    [ -n "$name" -o -z "$type" ] || name="$section"
     type="${type:-$section}"
     [ -n "$config" -a -n "$type" ] ||
         fail "config, type and name required for $command"

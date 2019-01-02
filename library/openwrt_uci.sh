@@ -31,6 +31,13 @@ init() {
         object) fail "keep_keys must be list or string";;
         array) json_get_values keep_keys "$_keep_keys" || :;;
     esac
+    [ -z "$key" ] &&
+        key="${config:+$config${section:+.$section${option:+.$option}}}" ||
+        { oIFS="$IFS"; IFS="."; set -- $key; IFS="$oIFS"
+            config="$1"; section="$2"; option="$3"; }
+    [ -z "$_ansible_diff" -o -z "$config" ] ||
+        set_diff "$(uci export "$config")"
+    [ -n "$command" ]  || { [ -z "$value" ] && command="get" || command="set"; }
 }
 
 uci() {
@@ -244,11 +251,6 @@ uci_cleanup_section() {
 }
 
 main() {
-    [ -z "$key" ] &&
-        key="${config:+$config${section:+.$section${option:+.$option}}}" ||
-        { oIFS="$IFS"; IFS="."; set -- $key; IFS="$oIFS"
-            config="$1"; section="$2"; option="$3"; }
-    [ -z "$command" ] && { [ -z "$value" ] && command="get" || command="set"; }
     case "$command" in
         batch|import)
             [ -n "$value" ] || fail "value required for $command";;
@@ -258,7 +260,6 @@ main() {
         add|get|delete|ensure)
             [ -n "$key" ] || fail "key required for $command";;
     esac
-
     case "$command" in
         batch)
             echo "$value" | final uci $command;;
@@ -312,11 +313,8 @@ cleanup() {
             json_set_namespace params
         }
     }
-    [ -z "$_ansible_diff" ] || {
-        local diff="$(uci changes)"
-        set_diff "$(echo "$diff" | sed -n 's/^-//p')" \
-            "$(echo "$diff" | grep -v ^-)"
-    }
+    [ -z "$_ansible_diff" -o -z "$config" ] ||
+        set_diff "" "$(uci export "$config")"
     [ -z "$_ansible_check_mode" -o -z "$state_path" -o ! -d "$state_path" ] ||
         rm -rf "$state_path"
 }

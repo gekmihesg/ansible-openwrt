@@ -14,7 +14,7 @@ Currently, the following modules have been implemented:
  * file
  * lineinfile
  * nohup (new)
- * okpg
+ * opkg
  * ping
  * service
  * setup

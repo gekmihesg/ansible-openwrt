@@ -238,6 +238,7 @@ _get_file_attributes() {
 
 set_file_attributes() {
     [ -z "$_ansible_check_mode" ] || return 0
+    [ "$mode" != "False" ] || mode=""
     [ -n "$owner" -o -n "$group" -o -n "$mode" ] || return 0
     local file="$1"
     local R="${2:+-R }"

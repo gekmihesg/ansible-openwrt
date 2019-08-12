@@ -5,7 +5,7 @@
 PARAMS="
     diff_peek/str
     force/bool//false
-    original_basename/str
+    original_basename=_original_basename/str
     path=dest=name/str/r
     recurse/bool//false
     src/str
@@ -60,7 +60,10 @@ main() {
     [ "$state" = "link" -o "$state" = "absent" -o ! -d "$path" ] || {
         basename="$original_basename"
         [ -n "$basename" -o -z "$src" ] || basename="$(basename -- "$src")"
-        [ -z "$basename" ] && path="$path/$basename"
+        [ -z "$basename" ] || {
+            path="${path%/}/$basename"
+            prev_state="$(get_state "$path")"
+        }
     }
 
     [ -z "$recurse" -o "$state" = "directory" ] ||

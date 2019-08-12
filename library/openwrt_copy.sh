@@ -7,8 +7,7 @@ PARAMS="
     dest/str/r
     directory_mode/str
     force=thirsty/bool//true
-    original_basename/str
-    remote_src/bool
+    original_basename=_original_basename/str
     src/str
     validate/str
     $FILE_PARAMS
@@ -51,6 +50,7 @@ main() {
     }
 
     [ ! -d "$dest" ] || {
+        dest="${dest%/}"
         [ -z "$original_basename" ] &&
             dest="$dest/$(basename -- "$src")" ||
             dest="$dest/$original_basename"
@@ -74,9 +74,7 @@ main() {
                 tmp="$($(printf "$validate" "$src") 2>&1)" ||
                     fail "failed to validate: $tmp"
             }
-            [ -n "$remote_src" ] &&
-                try cp -a -- "$src" "$dest" ||
-                try mv -- "$src" "$dest"
+            try 'cat -- "$src" > "$dest"'
         }
         changed
     }

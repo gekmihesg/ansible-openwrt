@@ -13,4 +13,4 @@
   import_tasks: packages.yml
   when:
     - "'openwrt' in group_names"
-    - openwrt_install_recommended_packages
+    - "openwrt_install_recommended_packages | bool"

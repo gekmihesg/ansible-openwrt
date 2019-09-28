@@ -48,7 +48,7 @@ Role Variables
 
     openwrt_ssh, openwrt_scp, openwrt_ssh_host, openwrt_ssh_user, openwrt_user_host:
         Helper shortcuts to do things like
-        "command: {{openwrt_scp}} {{openwrt_user_host|quote}}:/etc/rc.local /tmp"
+        "command: {{ openwrt_scp }} {{ openwrt_user_host|quote }}:/etc/rc.local /tmp"
 
 Example Playbook
 ----------------
@@ -77,7 +77,7 @@ Playbook:
         - gekmihesg.openwrt
       tasks:
         - name: copy openwrt image
-          command: "{{openwrt_scp}}" image.bin {{openwrt_user_host|quote}}:/tmp/sysupgrade.bin"
+          command: "{{ openwrt_scp }}" image.bin {{ openwrt_user_host|quote }}:/tmp/sysupgrade.bin"
           delegate_to: localhost
         - name: start sysupgrade
           nohup:

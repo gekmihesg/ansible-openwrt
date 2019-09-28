@@ -1,11 +1,11 @@
 ---
 - name: pin defaults
   set_fact:
-    openwrt_ssh: "{{openwrt_ssh}}"
-    openwrt_scp: "{{openwrt_scp}}"
-    openwrt_ssh_user: "{{openwrt_ssh_user}}"
-    openwrt_ssh_host: "{{openwrt_ssh_host}}"
-    openwrt_user_host: "{{openwrt_ssh_user|quote}}@{{openwrt_ssh_host|quote}}"
+    openwrt_ssh: "{{ openwrt_ssh }}"
+    openwrt_scp: "{{ openwrt_scp }}"
+    openwrt_ssh_user: "{{ openwrt_ssh_user }}"
+    openwrt_ssh_host: "{{ openwrt_ssh_host }}"
+    openwrt_user_host: "{{ openwrt_ssh_user|quote }}@{{ openwrt_ssh_host|quote }}"
   when: "'openwrt' in group_names"
   tags: always
 

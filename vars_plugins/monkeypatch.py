@@ -1,5 +1,6 @@
 import os
 from ansible.plugins.action import ActionBase
+from ansible.plugins.vars import BaseVarsPlugin
 
 def _fix_module_args(module_args):
     for k, v in module_args.items():
@@ -40,6 +41,6 @@ if ActionBase._configure_module != _configure_module:
     ActionBase.__configure_module = ActionBase._configure_module
     ActionBase._configure_module = _configure_module
 
-class FilterModule(object):
-    def filters(self):
+class VarsModule(BaseVarsPlugin):
+    def get_vars(*args, **kwargs):
         return dict()

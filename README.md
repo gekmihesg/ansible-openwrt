@@ -26,7 +26,7 @@ Currently, the following modules have been implemented:
  * uci (new)
  * wait\_for\_connection (implicit)
 
-To achieve all this, some monkey patching is involved (in case you wonder about the `filter_plugins`).
+To achieve all this, some monkey patching is involved (in case you wonder about the `vars_plugins`).
 
 Requirements
 ------------
@@ -132,7 +132,7 @@ Playbook:
 Running the modules outside of a playbook is possible like this:
 
     export ANSIBLE_LIBRARY=~/.ansible/roles/gekmihesg.openwrt/library
-    export ANSIBLE_FILTER_PLUGINS=~/.ansible/roles/gekmihesg.openwrt/filter_plugins
+    export ANSIBLE_VARS_PLUGINS=~/.ansible/roles/gekmihesg.openwrt/vars_plugins
     ansible -i openwrt-hosts -m setup all
 
 License

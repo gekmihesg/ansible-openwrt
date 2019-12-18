@@ -221,16 +221,18 @@ uci_ensure() {
     [ -n "$config" -a -n "$type" ] ||
         fail "config, type and name required for $command"
     [ -n "$name" ] && uci_check_type "$config.$name" "$type" || {
-        uci_find && {
+        [ "$_type_find" = "object" -o -n "$option" ] && uci_find && {
             [ -z "$name" ] || try uci rename "$config.$section=$name"
         } || uci_add
     }
     section="${name:-$_result}"
     key="$config.$section${option:+.$option}"
-    [ -z "$set_find" -o "$_type_find" = "array" -a -z "$option" ] || {
+    [ -z "$set_find" -o "$_type_find" != "object" -a -z "$option" ] || {
         uci_set find
-        key="$config.$section"
-        option=""
+        [ "$_type_value" != "object" ] || {
+            key="$config.$section"
+            option=""
+        }
     }
     [ -z "$_defined_value" ] || uci_set
     _result="$section"

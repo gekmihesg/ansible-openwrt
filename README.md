@@ -52,6 +52,15 @@ Role Variables
         Checks for some commands and installs the corresponding packages if they are
         missing. See requirements above. (default: yes)
 
+    openwrt_scp_if_ssh:
+        Whether to use scp instead of sftp for OpenWRT systems. Value can be `yes`,
+        `no` or `smart`. Ansible defaults to `smart` but this role defaults to `yes`
+        because OpenWRT does not offer sftp by default. (default: yes)
+
+    openwrt_remote_tmp:
+        Ansibles remote_tmp setting for OpenWRT systems. Defaults to /tmp to avoid
+        flash wear on target device. (default: /tmp)
+
     openwrt_wait_for_connection, openwrt_wait_for_connection_timeout:
         Whether to wait for the host (default: yes) and how long (300) after a
         network or wifi restart (see handlers).
@@ -76,9 +85,6 @@ Inventory:
     [openwrt:children]
     aps
     routers
-
-    [openwrt:vars]
-    ansible_remote_tmp=/tmp/ansible  # Reduce flash wear on target device
 
 Playbook:
 

@@ -6,6 +6,9 @@
     openwrt_ssh_user: "{{ openwrt_ssh_user }}"
     openwrt_ssh_host: "{{ openwrt_ssh_host }}"
     openwrt_user_host: "{{ openwrt_ssh_user|quote }}@{{ openwrt_ssh_host|quote }}"
+    ansible_ssh_transfer_method: "{{ openwrt_ssh_transfer_method }}"
+    ansible_scp_if_ssh: "{{ openwrt_scp_if_ssh }}"
+    ansible_remote_tmp: "{{ openwrt_remote_tmp }}"
   when: "'openwrt' in group_names"
   tags: always
 

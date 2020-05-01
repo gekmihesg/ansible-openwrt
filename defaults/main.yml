@@ -8,3 +8,7 @@ openwrt_ssh: "{{ ansible_ssh_executable|default('ssh') }} {{ ansible_ssh_common_
 openwrt_scp: "{{ ansible_scp_executable|default('scp') }} {{ ansible_scp_common_args|default('') }} {{ ansible_scp_extra_args|default('') }}"
 openwrt_ssh_host: "{{ ansible_host|default(ansible_ssh_host|default(inventory_hostname)) }}"
 openwrt_ssh_user: "{{ ansible_user|default(ansible_ssh_user|default('root')) }}"
+
+openwrt_scp_if_ssh: True
+openwrt_ssh_transfer_method: "{{ 'smart' if openwrt_scp_if_ssh == 'smart' else openwrt_scp_if_ssh|ternary('scp', 'sftp') }}"
+openwrt_remote_tmp: /tmp

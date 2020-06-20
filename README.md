@@ -36,8 +36,6 @@ This role was tested successfully with:
  * OpenWRT 18.06
  * OpenWRT 19.07
 
-Note: From OpenWRT 18.06 onward, there is a [bug in Dropbear](https://bugs.openwrt.org/index.php?do=details&task_id=1814) that can cause modules to fail if they produce too much output (> 14335 bytes). This can for example happen when changing big files and requesting a diff.
-
 Requirements
 ------------
 

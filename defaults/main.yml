@@ -11,4 +11,5 @@ openwrt_ssh_user: "{{ ansible_user|default(ansible_ssh_user|default('root')) }}"
 
 openwrt_scp_if_ssh: True
 openwrt_ssh_transfer_method: "{{ 'smart' if openwrt_scp_if_ssh == 'smart' else openwrt_scp_if_ssh|ternary('scp', 'sftp') }}"
+openwrt_ssh_use_tty: no
 openwrt_remote_tmp: /tmp

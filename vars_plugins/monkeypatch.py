@@ -1,6 +1,10 @@
 import os
 from ansible.plugins.action import ActionBase
 from ansible.plugins.vars import BaseVarsPlugin
+try:
+    from ansible.utils.collection_loader import resource_from_fqcr
+except ImportError:
+    resource_from_fqcr = lambda x: x
 
 def _fix_module_args(module_args):
     for k, v in module_args.items():
@@ -20,7 +24,8 @@ def _configure_module(self, module_name, module_args, task_vars=None):
         real_vars = task_vars
     if real_vars.get('ansible_connection', '') not in ('local',) and \
             'openwrt' in real_vars.get('group_names', list()):
-        openwrt_module = self._shared_loader_obj.module_loader.find_plugin('openwrt_' + module_name, '.sh')
+        leaf_module_name = resource_from_fqcr(module_name)
+        openwrt_module = self._shared_loader_obj.module_loader.find_plugin('openwrt_' + leaf_module_name, '.sh')
         if openwrt_module:
             module_name = os.path.basename(openwrt_module)[:-3]
     else:

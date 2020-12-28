@@ -288,7 +288,7 @@ main() {
         get)
             uci_get; exit 0;;
         delete)
-            final uci $command "$key${value:+=$value}";;
+            uci -q get "$key" 2>/dev/null && final uci $command "$key${value:+=$value}" || exit 0;;
         rename)
             final uci $command "$key=${name:-$value}";;
         revert)

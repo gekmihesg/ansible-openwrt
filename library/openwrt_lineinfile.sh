@@ -1,5 +1,6 @@
 #!/bin/sh
 # Copyright (c) 2017 Markus Weippert
+# Copyright (c) 2021 Vasilis Tsiligiannis
 # GNU General Public License v3.0 (see https://www.gnu.org/licenses/gpl-3.0.txt)
 
 PARAMS="
@@ -105,7 +106,7 @@ main() {
     esac
     [ -n "$regex" ] &&
         line_match="$(escape_slash "$regex")" ||
-        line_match="^$(escape_chars "$line" '/')\$"
+        line_match="^$(escape_chars "$line" '/+')\$"
     [ ! -d "$file" ] || fail "path $path is a directory"
     case "$state" in
         present)

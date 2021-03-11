@@ -1,5 +1,6 @@
 #!/bin/sh
 # Copyright (c) 2017 Markus Weippert
+# Copyright (c) 2021 Vasilis Tsiligiannis
 # GNU General Public License v3.0 (see https://www.gnu.org/licenses/gpl-3.0.txt)
 
 WANT_JSON="1"
@@ -238,6 +239,20 @@ uci_ensure() {
     _result="$section"
 }
 
+uci_delete() {
+    [ -n "$name" -o -z "$type" ] || name="$section"
+    type="${type:-$section}"
+    [ -n "$config" -a -n "$type" ] ||
+        fail "config, type and name required for $command"
+    [ -n "$name" ] && uci_check_type "$config.$name" "$type" || {
+        [ "$_type_find" = "object" -o -n "$option" ] && uci_find
+    }
+    section="${name:-$section}"
+    [ -n "$section" ] || return 1
+    key="$config.$section${option:+.$option}"
+    uci delete "$key${value:+=$value}"
+}
+
 uci_cleanup_section() {
     case "$command" in
         set|ensure|section) :;;
@@ -288,7 +303,7 @@ main() {
         get)
             uci_get; exit 0;;
         delete)
-            final uci $command "$key${value:+=$value}";;
+            uci_delete; exit 0;;
         rename)
             final uci $command "$key=${name:-$value}";;
         revert)

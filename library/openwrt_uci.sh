@@ -48,6 +48,12 @@ uci_change_hash() {
     uci changes | md5
 }
 
+uci_result_do() {
+    json_set_namespace result
+    "$@"
+    json_set_namespace params
+}
+
 uci_get_safe() {
     local tmp opts
     while [ "${1#-}" != "$1" ]; do opts="$opts $1"; shift; done
@@ -166,9 +172,11 @@ uci_find() {
             json_select_real find
             json_get_keys keys;;
         *)
-            [ -n "$config" -a -n "$type" -a -n "$option" ] ||
+            [ -n "$config" -a -n "$type" ] &&
+                [ -n "$option" -o "$command" = find_all ] ||
                 fail "config, type and option required for $command";;
     esac
+    [ "$command" != "find_all" ] || uci_result_do json_add_array result
     type="${type:-$section}"
     section=""; i=0
     while [ -n "$(uci -q get "$config.@$type[$i]")" ]; do
@@ -202,16 +210,25 @@ uci_find() {
                     esac
                 done;;
             *)
-                v="$(uci -q get "$config.$c.$option")" &&
-                    [ -z "$find" -o "$find" = "$v" ] || continue;;
+                [ -z "$option" ] || {
+                    v="$(uci -q get "$config.$c.$option")" &&
+                        [ -z "$find" -o "$find" = "$v" ] || continue
+                };;
         esac
-        section="$c"; break
+        [ "$command" = "find_all" ] || { section="$c"; break; }
+        uci_result_do json_add_string . "$c"
     done
     case "$_type_find" in
         array|object) json_select ..;;
     esac
-    _result="$section"
-    [ -n "$section" ] && return 0 || return 1
+    case "$command" in
+        find_all)
+            uci_result_do json_close_array
+            _result="";;
+        *)
+            _result="$section"
+            [ -n "$section" ] && return 0 || return 1;;
+    esac
 }
 
 uci_ensure() {
@@ -317,7 +334,7 @@ main() {
                 final uci $command "$key";;
         set)
             uci_set; exit 0;;
-        find)
+        find|find_all)
             uci_find; exit $?;;
         ensure|section)
             uci_ensure; exit 0;;

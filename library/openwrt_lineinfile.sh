@@ -20,7 +20,7 @@ escape_slash() {
 }
 
 escape_chars() {
-    echo "$1" | sed 's|['"$2"'\]|\\&|g;q'
+    echo "$1" | sed 's|['"${2:-}"'\]|\\&|g;q'
 }
 
 get_last_match() {
@@ -105,7 +105,7 @@ main() {
     esac
     [ -n "$regex" ] &&
         line_match="$(escape_slash "$regex")" ||
-        line_match="^$(escape_chars "$line" '/')\$"
+        line_match="^$(escape_chars "$line" '/.[*^$()+?{|')\$"
     [ ! -d "$file" ] || fail "path $path is a directory"
     case "$state" in
         present)

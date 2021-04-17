@@ -37,7 +37,7 @@ init() {
             config="$1"; section="$2"; option="$3"; }
     [ -z "$_ansible_diff" -o -z "$config" ] ||
         set_diff "$(uci export "$config")"
-    [ -n "$command" ]  || { [ -z "$value" ] && command="get" || command="set"; }
+    [ -n "$command" ] || { [ -z "$value" ] && command="get" || command="set"; }
 }
 
 uci() {
@@ -215,7 +215,7 @@ uci_find() {
 }
 
 uci_ensure() {
-    local keys i c v k t
+    local keys k v
     [ -n "$name" -o -z "$type" ] || name="$section"
     type="${type:-$section}"
     [ -n "$config" -a -n "$type" ] ||
@@ -223,10 +223,31 @@ uci_ensure() {
     [ -n "$name" ] && uci_check_type "$config.$name" "$type" || {
         [ "$_type_find" = "object" -o -n "$option" ] && uci_find && {
             [ -z "$name" ] || try uci rename "$config.$section=$name"
-        } || uci_add
+        } || {
+            [ "$command" = absent ] && return 0 || uci_add
+        }
     }
     section="${name:-$_result}"
     key="$config.$section${option:+.$option}"
+    [ "$command" = "absent" ] && {
+        [ -z "$_defined_value" ] &&
+            final uci delete "$key" ||
+            case "$_type_value" in
+                array|object)
+                    json_select_real value
+                    json_get_keys keys
+                    for k in $keys; do
+                        json_get_var v "$k"
+                        case "$_type_value" in
+                            array) uci delete "$config.$section.$v";;
+                            object) uci delete "$config.$section.$k=$v";;
+                        esac
+                    done
+                    json_select ..;;
+                *) uci delete "$config.$section.$value";;
+            esac
+        return 0
+    }
     [ -z "$set_find" -o "$_type_find" != "object" -a -z "$option" ] || {
         uci_set find
         [ "$_type_value" != "object" ] || {
@@ -262,7 +283,7 @@ main() {
         add_list|del_list|rename|reorder)
             [ -n "$key" -a -n "$value" ] ||
                 fail "key and value required for $command";;
-        add|get|delete|ensure)
+        add|get|delete|ensure|absent)
             [ -n "$key" ] || fail "key required for $command";;
     esac
     case "$command" in
@@ -299,6 +320,11 @@ main() {
         find)
             uci_find; exit $?;;
         ensure|section)
+            uci_ensure; exit 0;;
+        absent)
+            [ -n "$_defined_find" ] || {
+                uci delete "$key${value:+=$value}"; exit 0
+            }
             uci_ensure; exit 0;;
         *) fail "unknown command: $command";;
     esac

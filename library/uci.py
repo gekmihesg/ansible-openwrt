@@ -20,6 +20,7 @@ options:
       - Command to execute. Execution takes place in a shell.
     default: set if value else get
     choices:
+      - absent
       - add
       - add_list
       - batch
@@ -125,6 +126,25 @@ EXAMPLES = '''
     value:
       encryption: none
     replace: yes
+
+# Find a matching wifi-iface and delete it.
+- uci:
+    command: absent
+    config: wireless
+    type: wifi-iface
+    find:
+      ssid: My SSID broken
+
+# Find a matching wifi-iface and delete the options key and encryption.
+- uci:
+    command: absent
+    config: wireless
+    type: wifi-iface
+    find:
+      ssid: My SSID public
+    value:
+      - key
+      - encryption
 
 # commit changes and notify
 - uci: cmd=commit

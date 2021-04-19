@@ -248,7 +248,7 @@ uci_ensure() {
     key="$config.$section${option:+.$option}"
     [ "$command" = "absent" ] && {
         [ -z "$_defined_value" ] &&
-            final uci delete "$key" ||
+            { uci -q delete "$key" || :; } ||
             case "$_type_value" in
                 array|object)
                     json_select_real value
@@ -256,12 +256,12 @@ uci_ensure() {
                     for k in $keys; do
                         json_get_var v "$k"
                         case "$_type_value" in
-                            array) uci delete "$config.$section.$v";;
-                            object) uci delete "$config.$section.$k=$v";;
+                            array) uci -q delete "$config.$section.$v";;
+                            object) uci -q delete "$config.$section.$k=$v";;
                         esac
                     done
                     json_select ..;;
-                *) uci delete "$config.$section.$value";;
+                *) uci -q delete "$config.$section.$value";;
             esac
         return 0
     }
@@ -340,7 +340,7 @@ main() {
             uci_ensure; exit 0;;
         absent)
             [ -n "$_defined_find" ] || {
-                uci delete "$key${value:+=$value}"; exit 0
+                uci -q delete "$key${value:+=$value}"; exit 0
             }
             uci_ensure; exit 0;;
         *) fail "unknown command: $command";;

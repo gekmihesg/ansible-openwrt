@@ -25,7 +25,6 @@ init() {
     state_path=""
     [ -z "$_ansible_check_mode" ] || state_path="$(mktemp -d)" ||
         fail "could not create state path"
-    uci="/sbin/uci${state_path:+ -P '${state_path//'/'\\''}'}"
     changes="$(uci_change_hash)"
     case "$_type_keep_keys" in
         object) fail "keep_keys must be list or string";;
@@ -41,7 +40,8 @@ init() {
 }
 
 uci() {
-    eval "command $uci \"\$@\""
+    [ -z "$state_path" ] || set -- -P "$state_path" "$@"
+    command uci "$@"
 }
 
 uci_change_hash() {

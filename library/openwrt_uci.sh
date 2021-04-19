@@ -4,6 +4,7 @@
 
 WANT_JSON="1"
 PARAMS="
+    autocommit/bool
     command=cmd/str
     config/str
     find=find_by=search/any
@@ -293,6 +294,20 @@ uci_cleanup_section() {
     done
 }
 
+uci_revert() {
+    [ -z "$key" ] && rm -f -- "/tmp/.uci"/* 2>/dev/null || uci revert "$key"
+}
+
+uci_autocommit() {
+    [ -n "$autocommit" ] || return 0
+    case "$command" in
+        commit|revert) return 0;;
+    esac
+    [ "$1" -eq 0 ] && {
+        [ -n "$config" ] && uci commit "$config" || uci commit
+    } || uci_revert
+}
+
 main() {
     case "$command" in
         batch|import)
@@ -330,8 +345,7 @@ main() {
         rename)
             final uci $command "$key=${name:-$value}";;
         revert)
-            [ -z "$key" ] && final rm -f -- "/tmp/.uci"/* 2>/dev/null ||
-                final uci $command "$key";;
+            final uci_revert;;
         set)
             uci_set; exit 0;;
         find|find_all)
@@ -348,7 +362,8 @@ main() {
 }
 
 cleanup() {
-    [ "$1" -ne 0 ] || uci_cleanup_section
+    local ec="$1"
+    [ "$ec" -ne 0 ] || uci_cleanup_section
     [ "$changes" = "$(uci_change_hash)" ] || {
         changed
         [ "$_ansible_verbosity" -lt 2 ] || {
@@ -360,6 +375,7 @@ cleanup() {
             json_close_array
             json_set_namespace params
         }
+        uci_autocommit "$ec"
     }
     [ -z "$_ansible_diff" -o -z "$config" ] ||
         set_diff "" "$(uci export "$config")"

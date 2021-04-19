@@ -15,6 +15,11 @@ description:
   - It supports all the command line functionality plus some extra commands.
 author: Markus Weippert (@gekmihesg)
 options:
+  autocommit:
+    description:
+      - Whether to automatically commit changes
+    type: bool
+    default: false
   command:
     description:
       - Command to execute. Execution takes place in a shell.

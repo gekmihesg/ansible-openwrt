@@ -28,3 +28,21 @@
     - setup wifi
     - reload wifi
     - restart network
+
+- name: uci commit
+  nohup:
+    command: uci commit
+    delay: 1
+  when: "'openwrt' in group_names"
+
+- name: restart firewall
+  nohup:
+    command: /etc/init.d/firewall restart
+    delay: 1
+  when: "'openwrt' in group_names"
+
+- name: reload system
+  nohup:
+    command: /etc/init.d/system reload
+    delay: 1
+  when: "'openwrt' in group_names"

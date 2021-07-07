@@ -35,7 +35,7 @@ main() {
         tmp="$(dirname -- "$dest")"
         [ -d "$tmp" ] || {
             _IFS="$IFS"; IFS="/"; set -- $tmp; IFS="$_IFS"
-            tmp="$mode"; mode="$directoy_mode"
+            tmp="$mode"; mode="$directory_mode"
             local d
             local p=""
             for d; do

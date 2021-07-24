@@ -91,7 +91,7 @@ Playbook:
         - gekmihesg.openwrt
       tasks:
         - name: copy openwrt image
-          command: "{{ openwrt_scp }}" image.bin {{ openwrt_user_host|quote }}:/tmp/sysupgrade.bin"
+          command: "{{ openwrt_scp }} image.bin {{ openwrt_user_host|quote }}:/tmp/sysupgrade.bin"
           delegate_to: localhost
         - name: start sysupgrade
           nohup:

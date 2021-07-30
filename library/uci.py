@@ -175,7 +175,7 @@ section:
     description: section part of I(key)
     returned: when given
     type: string
-    sample: @wifi-iface[0]
+    sample: '@wifi-iface[0]'
 option:
     description: option part of I(key)
     returned: when given

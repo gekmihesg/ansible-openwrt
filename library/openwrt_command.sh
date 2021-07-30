@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2017 Markus Weippert
+# Copyright (c) 2021 Markus Weippert
 # GNU General Public License v3.0 (see https://www.gnu.org/licenses/gpl-3.0.txt)
 
 PARAMS="
@@ -54,6 +54,7 @@ main() {
     stdout="$(cat "$out")"
     stderr="$(cat "$err")"
     changed
+    test "$rc" -eq 0 || fail "non-zero return code"
     return 0
 }
 

@@ -40,7 +40,7 @@ main() {
 
     ts_start="$(date +%s)"
     [ -z "$uses_shell" ] && {
-        $cmd >"$out" 2>"$err"; rc=$?; :
+        echo "$cmd" | xargs sh -c 'exec "$@"' -- >"$out" 2>"$err"; rc=$?; :
     } || {
         "$executable" -c "$cmd" >"$out" 2>"$err"; rc=$?; :
     }

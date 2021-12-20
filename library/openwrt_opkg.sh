@@ -7,6 +7,7 @@ PARAMS="
     state/str//present
     force/str
     update_cache/bool
+    autoremove/bool
 "
 
 query_package() {
@@ -32,7 +33,7 @@ remove_packages() {
     for pkg; do
         query_package "$pkg" || continue
         [ -n "$_ansible_check_mode" ] || {
-            try opkg remove$force "$pkg"
+            try opkg remove$force $autoremove "$pkg"
             ! query_package "$pkg" || fail "failed to remove $pkg: $_result"
         }
         changed
@@ -51,6 +52,9 @@ main() {
             *) fail "unknown force option";;
         esac
         force=" --force-$force"
+    }
+    [ -z "$autoremove" ] || {
+        autoremove=" --autoremove"
     }
 
     [ -z "$update_cache" -o -n "$_ansible_check_mode" ] || try opkg update

@@ -35,6 +35,7 @@ This role was tested successfully with:
  * LEDE 17.01
  * OpenWRT 18.06
  * OpenWRT 19.07
+ * OpenWRT 21.02
 
 Requirements
 ------------

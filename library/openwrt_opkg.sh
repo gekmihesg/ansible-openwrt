@@ -8,6 +8,7 @@ PARAMS="
     force/str
     update_cache/bool
     autoremove/bool
+    nodeps/bool
 "
 
 query_package() {
@@ -20,7 +21,7 @@ install_packages() {
     for pkg; do
         ! query_package "$pkg" || continue
         [ -n "$_ansible_check_mode" ] || {
-            try opkg install$force "$pkg"
+            try opkg install$force $nodeps "$pkg"
             query_package "$pkg" || fail "failed to install $pkg: $_result"
         }
         changed
@@ -33,7 +34,7 @@ remove_packages() {
     for pkg; do
         query_package "$pkg" || continue
         [ -n "$_ansible_check_mode" ] || {
-            try opkg remove$force $autoremove "$pkg"
+            try opkg remove$force $autoremove $nodeps "$pkg"
             ! query_package "$pkg" || fail "failed to remove $pkg: $_result"
         }
         changed
@@ -55,6 +56,10 @@ main() {
     }
     [ -z "$autoremove" ] || {
         autoremove=" --autoremove"
+    }
+
+    [ -z "$nodeps" ] || {
+        nodeps=" --nodeps"
     }
 
     [ -z "$update_cache" -o -n "$_ansible_check_mode" ] || try opkg update

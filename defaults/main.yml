@@ -13,3 +13,5 @@ openwrt_scp_if_ssh: True
 openwrt_ssh_transfer_method: "{{ 'smart' if openwrt_scp_if_ssh == 'smart' else openwrt_scp_if_ssh|ternary('scp', 'sftp') }}"
 openwrt_ssh_use_tty: no
 openwrt_remote_tmp: /tmp
+
+openwrt_remote_opkg_lists_dir: /tmp/opkg-lists

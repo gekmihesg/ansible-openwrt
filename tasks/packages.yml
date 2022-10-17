@@ -14,7 +14,7 @@
 - name: update opkg cache
   opkg:
     name: opkg
-    update_cache: yes
+    update_cache: true
   register: _update
   when: not _opkg_lists.stat.exists or
       _epoch.stdout|int - _opkg_lists.stat.mtime > 86400

@@ -1,0 +1,8 @@
+---
+extends: default
+
+rules:
+  line-length: disable
+  truthy: disable
+
+# code: language=yaml tabSize=2

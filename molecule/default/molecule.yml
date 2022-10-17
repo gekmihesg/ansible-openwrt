@@ -1,0 +1,17 @@
+---
+dependency:
+  name: galaxy
+  requirements-file: collections.yml
+driver:
+  name: docker
+platforms:
+  - name: openwrt_instance
+    image: openwrtorg/rootfs:latest
+    pre_build_image: false
+    dockerfile: Dockerfile
+    groups:
+      - openwrt
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

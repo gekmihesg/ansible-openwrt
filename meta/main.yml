@@ -1,4 +1,5 @@
 galaxy_info:
+  namespace: gekmihesg
   author: Markus Weippert
   description: Manage OpenWRT without python
   issue_tracker_url: https://github.com/gekmihesg/ansible-openwrt/issues

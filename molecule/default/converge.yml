@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: "Include gekmihesg.openwrt"
+      include_role:
+        name: "openwrt"

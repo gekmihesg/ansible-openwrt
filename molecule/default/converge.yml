@@ -5,4 +5,4 @@
   tasks:
     - name: "Include gekmihesg.openwrt"
       include_role:
-        name: "openwrt"
+        name: "gekmihesg.openwrt"

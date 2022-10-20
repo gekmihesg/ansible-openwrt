@@ -1,6 +1,6 @@
 ---
 - name: "check for command {{ item.key }}"
-  command: "which {{ item.key|quote }}"
+  command: "which {{ item.key | quote }}"
   register: _package
   check_mode: false
   changed_when: false

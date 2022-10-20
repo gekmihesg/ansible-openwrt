@@ -4,5 +4,6 @@ extends: default
 rules:
   line-length: disable
   truthy: disable
+  comments-indentation: disable
 
 # code: language=yaml tabSize=2

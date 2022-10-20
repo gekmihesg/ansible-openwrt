@@ -4,12 +4,12 @@ openwrt_install_recommended_packages: true
 openwrt_wait_for_connection: true
 openwrt_wait_for_connection_timeout: 600
 
-openwrt_ssh: "{{ ansible_ssh_executable|default('ssh') }} {{ ansible_ssh_common_args|default('') }} {{ ansible_ssh_extra_args|default('') }}"
-openwrt_scp: "{{ ansible_scp_executable|default('scp') }} {{ ansible_scp_common_args|default('') }} {{ ansible_scp_extra_args|default('') }}"
-openwrt_ssh_host: "{{ ansible_host|default(ansible_ssh_host|default(inventory_hostname)) }}"
-openwrt_ssh_user: "{{ ansible_user|default(ansible_ssh_user|default('root')) }}"
+openwrt_ssh: "{{ ansible_ssh_executable | default('ssh') }} {{ ansible_ssh_common_args | default('') }} {{ ansible_ssh_extra_args | default('') }}"
+openwrt_scp: "{{ ansible_scp_executable | default('scp') }} {{ ansible_scp_common_args | default('') }} {{ ansible_scp_extra_args | default('') }}"
+openwrt_ssh_host: "{{ ansible_host | default(ansible_ssh_host | default(inventory_hostname)) }}"
+openwrt_ssh_user: "{{ ansible_user | default(ansible_ssh_user | default('root')) }}"
 
 openwrt_scp_if_ssh: true
-openwrt_ssh_transfer_method: "{{ 'smart' if openwrt_scp_if_ssh == 'smart' else openwrt_scp_if_ssh|ternary('scp', 'sftp') }}"
+openwrt_ssh_transfer_method: "{{ 'smart' if openwrt_scp_if_ssh == 'smart' else openwrt_scp_if_ssh | ternary('scp', 'sftp') }}"
 openwrt_ssh_use_tty: false
 openwrt_remote_tmp: /tmp

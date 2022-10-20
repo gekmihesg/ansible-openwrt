@@ -5,12 +5,20 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: openwrt_instance
+  - name: instance_latest
     image: openwrtorg/rootfs:latest
     pre_build_image: false
-    dockerfile: Dockerfile
     groups:
       - openwrt
+    environment:
+      openwrt_image_tag: latest
+  - name: instance_x86-64-18.06.6
+    image: openwrtorg/rootfs:x86-64-18.06.6
+    pre_build_image: false
+    groups:
+      - openwrt
+    environment:
+      openwrt_image_tag: x86-64-18.06.6
 provisioner:
   name: ansible
 verifier:
@@ -18,3 +26,4 @@ verifier:
 lint: |
   set -e
   yamllint .
+  ansible-lint .

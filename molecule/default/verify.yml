@@ -4,7 +4,18 @@
 - name: Verify
   hosts: all
   gather_facts: false
+  roles:
+    - gekmihesg.openwrt
+  vars:
+    openwrt_install_recommended_packages: false
   tasks:
-  - name: Example assertion
-    ansible.builtin.assert:
-      that: true
+    - name: Run simple command
+      command:
+        cmd: ". /etc/os-release && echo Holy Canole Batman, it is $OPENWRT_RELEASE"
+        uses_shell: true
+      register: holy_canole
+
+    - name: Assert Canole
+      ansible.builtin.assert:
+        that:
+          - holy_canole.stdout.startswith("Holy Canole Batman, it is OpenWrt")

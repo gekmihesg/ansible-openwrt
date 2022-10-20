@@ -1,5 +1,5 @@
 FROM openwrtorg/rootfs:latest
 
-RUN mkdir /var/lock \
+RUN mkdir -p /var/lock \
   && opkg update \
   && opkg install bash

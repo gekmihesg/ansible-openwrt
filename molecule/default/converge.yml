@@ -4,5 +4,5 @@
   gather_facts: false
   tasks:
     - name: "Include gekmihesg.openwrt"
-      include_role:
+      ansible.builtin.include_role:
         name: "gekmihesg.openwrt"

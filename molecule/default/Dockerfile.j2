@@ -1,4 +1,4 @@
-FROM openwrtorg/rootfs:latest
+FROM openwrtorg/rootfs:{{item.environment.openwrt_image_tag}}
 
 RUN mkdir -p /var/lock \
   && opkg update \

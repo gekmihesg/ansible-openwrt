@@ -1,7 +1,7 @@
 ---
 - name: check whether opkg caches need update
   stat:
-    path: /tmp/opkg-lists
+    path: "{{ openwrt_remote_opkg_lists_dir }}"
   register: _opkg_lists
 
 - name: get current system time

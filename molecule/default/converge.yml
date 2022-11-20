@@ -3,6 +3,9 @@
   hosts: all
   gather_facts: false
   tasks:
+    - name: "Create /var/lock"
+      ansible.builtin.raw: "mkdir -p /var/lock"
+      changed_when: false
     - name: "Include gekmihesg.openwrt"
       ansible.builtin.include_role:
         name: "gekmihesg.openwrt"

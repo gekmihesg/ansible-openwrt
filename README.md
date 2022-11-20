@@ -1,5 +1,5 @@
 Ansible Role: openwrt
-=========
+=====================
 
 Manage OpenWRT and derivatives with Ansible but without Python.
 
@@ -160,3 +160,11 @@ Developing
 
 Writing custom modules for this framework isn't to hard. The modules are wrapped into a wrapper script, that provides some common functions for parameter parsing, json handling, response generation, and some more.
 All modules must match `openwrt_<module_name>.sh`. If module\_name is not one of Ansibles core modules, there must also be a `<module_name>.py`. This does not have to have any functionality (it may have some for non OpenWRT systems) and can contain the documentation.
+
+Make sure to install the `requirements.txt` packages in your virtual environment and, with the venv activated, run:
+
+    $ molecule test
+
+before commiting and submitting your PR.
+
+Writing tests for your new module is also highly recommended.

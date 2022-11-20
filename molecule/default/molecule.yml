@@ -31,11 +31,10 @@ platforms:
       - openwrt
   - name: instance_x86-64-18.06.6
     image: openwrtorg/rootfs:x86-64-18.06.6
-    pre_build_image: false
+    command: "sh -c 'while true; do sleep 10000; done'"
+    pre_build_image: true
     groups:
       - openwrt
-    environment:
-      openwrt_image_tag: x86-64-18.06.6
 provisioner:
   name: ansible
 verifier:

@@ -73,82 +73,87 @@ Example Playbook
 
 Inventory:
 
-    [aps]
-    ap1.example.com
-    ap2.example.com
-    ap3.example.com
+```ini
+[aps]
+ap1.example.com
+ap2.example.com
+ap3.example.com
 
-    [routers]
-    router1.example.com
+[routers]
+router1.example.com
 
-    [openwrt:children]
-    aps
-    routers
+[openwrt:children]
+aps
+routers
+```
 
 Playbook:
 
-    - hosts: openwrt
-      roles:
-        - gekmihesg.openwrt
-      tasks:
-        - name: copy openwrt image
-          command: "{{ openwrt_scp }} image.bin {{ openwrt_user_host|quote }}:/tmp/sysupgrade.bin"
-          delegate_to: localhost
-        - name: start sysupgrade
-          nohup:
-            command: sysupgrade -q /tmp/sysupgrade.bin
-        - name: wait for reboot
-          wait_for_connection:
-            timeout: 300
-            delay: 60
-        - name: install mdns
-          opkg:
-            name: mdns
-            state: present
-        - name: enable and start mdns
-          service:
-            name: mdns
-            state: started
-            enabled: yes
-        - name: copy authorized keys
-          copy:
-            src: authorized_keys
-            dest: /etc/dropbear/authorized_keys
-        - name: revert pending changes
-          uci:
-            command: revert
-        - name: configure wifi device radio0
-          uci:
-            command: set
-            key: wireless.radio0
-            value:
-              phy: phy0
-              type: mac80211
-              hwmode: 11g
-              channel: auto
-        - name: configure wifi interface
-          uci:
-            command: section
-            config: wireless
-            type: wifi-iface
-            find_by:
-              device: radio0
-              mode: ap
-            value:
-              ssid: MySSID
-              encryption: psk2+ccmp
-              key: very secret
-        - name: commit changes
-          uci:
-            command: commit
-          notify: reload wifi
-
+```yaml
+- hosts: openwrt
+  roles:
+    - gekmihesg.openwrt
+  tasks:
+    - name: copy openwrt image
+      command: "{{ openwrt_scp }} image.bin {{ openwrt_user_host|quote }}:/tmp/sysupgrade.bin"
+      delegate_to: localhost
+    - name: start sysupgrade
+      nohup:
+        command: sysupgrade -q /tmp/sysupgrade.bin
+    - name: wait for reboot
+      wait_for_connection:
+        timeout: 300
+        delay: 60
+    - name: install mdns
+      opkg:
+        name: mdns
+        state: present
+    - name: enable and start mdns
+      service:
+        name: mdns
+        state: started
+        enabled: yes
+    - name: copy authorized keys
+      copy:
+        src: authorized_keys
+        dest: /etc/dropbear/authorized_keys
+    - name: revert pending changes
+      uci:
+        command: revert
+    - name: configure wifi device radio0
+      uci:
+        command: set
+        key: wireless.radio0
+        value:
+          phy: phy0
+          type: mac80211
+          hwmode: 11g
+          channel: auto
+    - name: configure wifi interface
+      uci:
+        command: section
+        config: wireless
+        type: wifi-iface
+        find_by:
+          device: radio0
+          mode: ap
+        value:
+          ssid: MySSID
+          encryption: psk2+ccmp
+          key: very secret
+    - name: commit changes
+      uci:
+        command: commit
+      notify: reload wifi
+```
 
 Running the modules outside of a playbook is possible like this:
 
-    export ANSIBLE_LIBRARY=~/.ansible/roles/gekmihesg.openwrt/library
-    export ANSIBLE_VARS_PLUGINS=~/.ansible/roles/gekmihesg.openwrt/vars_plugins
-    ansible -i openwrt-hosts -m setup all
+```bash
+$ export ANSIBLE_LIBRARY=~/.ansible/roles/gekmihesg.openwrt/library
+$ export ANSIBLE_VARS_PLUGINS=~/.ansible/roles/gekmihesg.openwrt/vars_plugins
+$ ansible -i openwrt-hosts -m setup all
+```
 
 License
 -------
@@ -163,7 +168,9 @@ All modules must match `openwrt_<module_name>.sh`. If module\_name is not one of
 
 Make sure to install the `requirements.txt` packages in your virtual environment and, with the venv activated, run:
 
-    $ molecule test
+```bash
+$ molecule test
+```
 
 before commiting and submitting your PR.
 

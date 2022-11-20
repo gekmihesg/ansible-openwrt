@@ -7,11 +7,10 @@ driver:
 platforms:
   - name: instance_latest
     image: openwrtorg/rootfs:latest
-    pre_build_image: false
+    command: sleep infinity
+    pre_build_image: true
     groups:
       - openwrt
-    environment:
-      openwrt_image_tag: latest
   - name: instance_x86_64-22.03.2
     image: openwrtorg/rootfs:x86_64-22.03.2
     pre_build_image: false

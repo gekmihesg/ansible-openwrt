@@ -19,11 +19,10 @@ platforms:
       - openwrt
   - name: instance_x86_64-21.02.5
     image: openwrtorg/rootfs:x86_64-21.02.5
-    pre_build_image: false
+    command: sleep infinity
+    pre_build_image: true
     groups:
       - openwrt
-    environment:
-      openwrt_image_tag: x86_64-21.02.5
   - name: instance_x86_64-19.07.10
     image: openwrtorg/rootfs:x86_64-19.07.10
     pre_build_image: false

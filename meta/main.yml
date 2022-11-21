@@ -1,22 +1,27 @@
+---
 galaxy_info:
+  namespace: gekmihesg
+  role_name: openwrt
   author: Markus Weippert
   description: Manage OpenWRT without python
   issue_tracker_url: https://github.com/gekmihesg/ansible-openwrt/issues
   license: GPL-3.0
-  min_ansible_version: 2.4
+  min_ansible_version: '2.4'
   platforms:
     - name: GenericLinux
-  #platforms:
-  #- name: LEDE
-  #  versions:
-  #  - 17.01
-  #- name: OpenWRT
-  #  versions:
-  #  - 15.05
+    # platforms:
+    # - name: LEDE
+    #   versions:
+    #   - 17.01
+    # - name: OpenWRT
+    #   versions:
+    #   - 15.05
   galaxy_tags:
-  - busybox
-  - lede
-  - openwrt
-  - shell
-  - uci
+    - busybox
+    - lede
+    - openwrt
+    - shell
+    - uci
 dependencies: []
+
+# code: language=yaml tabSize=2

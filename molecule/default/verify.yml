@@ -1,0 +1,49 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  roles:
+    - gekmihesg.openwrt
+  vars:
+    openwrt_install_recommended_packages: false
+  tasks:
+    - name: Retrieve /etc/os-release
+      slurp:
+        src: /etc/os-release
+      register: os_release_slurp
+
+    - name: Populate fact os_release
+      ansible.builtin.set_fact:
+        os_release: >-
+          {{
+            _os_release_dict.keys() | map('lower')
+            | zip(_os_release_dict.values())
+            | items2dict(key_name=0, value_name=1)
+          }}
+      vars:
+        _os_release_lines: "{{ os_release_slurp['content'] | b64decode | split('\n') }}"
+        _os_release_split: "{{ _os_release_lines | map('regex_search', '^([A-Z_0-9]+)=\"(.*)\"$', '\\1', '\\2') | reject('none') }}"
+        _os_release_dict: "{{ dict(_os_release_split) }}"
+
+    - name: Run simple command
+      command:
+        cmd: "echo Holy canole,    it\\'s {{ os_release.name }}"
+      register: holy_canole
+
+    - name: Assert Canole
+      ansible.builtin.assert:
+        that:
+          - holy_canole.stdout.startswith("Holy canole, it's OpenWrt")
+
+    - name: Read UCI
+      uci:
+        command: get
+        key: network.wan.ifname
+      register: uci_wan_ifname
+
+    - name: Assert WAN network interface name (UCI)
+      ansible.builtin.assert:
+        that:
+          - uci_wan_ifname.result == "eth0"

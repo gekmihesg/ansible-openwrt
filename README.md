@@ -1,5 +1,5 @@
 Ansible Role: openwrt
-=========
+=====================
 
 Manage OpenWRT and derivatives with Ansible but without Python.
 
@@ -32,10 +32,11 @@ Compatibility
 -------------
 
 This role was tested successfully with:
- * LEDE 17.01
+ * LEDE 17.01 (manually)
  * OpenWRT 18.06
  * OpenWRT 19.07
  * OpenWRT 21.02
+ * OpenWRT 22.03
 
 Requirements
 ------------
@@ -73,82 +74,87 @@ Example Playbook
 
 Inventory:
 
-    [aps]
-    ap1.example.com
-    ap2.example.com
-    ap3.example.com
+```ini
+[aps]
+ap1.example.com
+ap2.example.com
+ap3.example.com
 
-    [routers]
-    router1.example.com
+[routers]
+router1.example.com
 
-    [openwrt:children]
-    aps
-    routers
+[openwrt:children]
+aps
+routers
+```
 
 Playbook:
 
-    - hosts: openwrt
-      roles:
-        - gekmihesg.openwrt
-      tasks:
-        - name: copy openwrt image
-          command: "{{ openwrt_scp }} image.bin {{ openwrt_user_host|quote }}:/tmp/sysupgrade.bin"
-          delegate_to: localhost
-        - name: start sysupgrade
-          nohup:
-            command: sysupgrade -q /tmp/sysupgrade.bin
-        - name: wait for reboot
-          wait_for_connection:
-            timeout: 300
-            delay: 60
-        - name: install mdns
-          opkg:
-            name: mdns
-            state: present
-        - name: enable and start mdns
-          service:
-            name: mdns
-            state: started
-            enabled: yes
-        - name: copy authorized keys
-          copy:
-            src: authorized_keys
-            dest: /etc/dropbear/authorized_keys
-        - name: revert pending changes
-          uci:
-            command: revert
-        - name: configure wifi device radio0
-          uci:
-            command: set
-            key: wireless.radio0
-            value:
-              phy: phy0
-              type: mac80211
-              hwmode: 11g
-              channel: auto
-        - name: configure wifi interface
-          uci:
-            command: section
-            config: wireless
-            type: wifi-iface
-            find_by:
-              device: radio0
-              mode: ap
-            value:
-              ssid: MySSID
-              encryption: psk2+ccmp
-              key: very secret
-        - name: commit changes
-          uci:
-            command: commit
-          notify: reload wifi
-
+```yaml
+- hosts: openwrt
+  roles:
+    - gekmihesg.openwrt
+  tasks:
+    - name: copy openwrt image
+      command: "{{ openwrt_scp }} image.bin {{ openwrt_user_host|quote }}:/tmp/sysupgrade.bin"
+      delegate_to: localhost
+    - name: start sysupgrade
+      nohup:
+        command: sysupgrade -q /tmp/sysupgrade.bin
+    - name: wait for reboot
+      wait_for_connection:
+        timeout: 300
+        delay: 60
+    - name: install mdns
+      opkg:
+        name: mdns
+        state: present
+    - name: enable and start mdns
+      service:
+        name: mdns
+        state: started
+        enabled: yes
+    - name: copy authorized keys
+      copy:
+        src: authorized_keys
+        dest: /etc/dropbear/authorized_keys
+    - name: revert pending changes
+      uci:
+        command: revert
+    - name: configure wifi device radio0
+      uci:
+        command: set
+        key: wireless.radio0
+        value:
+          phy: phy0
+          type: mac80211
+          hwmode: 11g
+          channel: auto
+    - name: configure wifi interface
+      uci:
+        command: section
+        config: wireless
+        type: wifi-iface
+        find_by:
+          device: radio0
+          mode: ap
+        value:
+          ssid: MySSID
+          encryption: psk2+ccmp
+          key: very secret
+    - name: commit changes
+      uci:
+        command: commit
+      notify: reload wifi
+```
 
 Running the modules outside of a playbook is possible like this:
 
-    export ANSIBLE_LIBRARY=~/.ansible/roles/gekmihesg.openwrt/library
-    export ANSIBLE_VARS_PLUGINS=~/.ansible/roles/gekmihesg.openwrt/vars_plugins
-    ansible -i openwrt-hosts -m setup all
+```bash
+$ export ANSIBLE_LIBRARY=~/.ansible/roles/gekmihesg.openwrt/library
+$ export ANSIBLE_VARS_PLUGINS=~/.ansible/roles/gekmihesg.openwrt/vars_plugins
+$ ansible -i openwrt-hosts -m setup all
+```
 
 License
 -------
@@ -160,3 +166,13 @@ Developing
 
 Writing custom modules for this framework isn't to hard. The modules are wrapped into a wrapper script, that provides some common functions for parameter parsing, json handling, response generation, and some more.
 All modules must match `openwrt_<module_name>.sh`. If module\_name is not one of Ansibles core modules, there must also be a `<module_name>.py`. This does not have to have any functionality (it may have some for non OpenWRT systems) and can contain the documentation.
+
+Make sure to install the `requirements.txt` packages in your virtual environment and, with the venv activated, run:
+
+```bash
+$ molecule test
+```
+
+before commiting and submitting your PR.
+
+Writing tests for your new module is also highly recommended.

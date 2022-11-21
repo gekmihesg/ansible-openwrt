@@ -1,8 +1,9 @@
+---
 name: Release to Ansible Galaxy
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -11,5 +12,5 @@ jobs:
     steps:
       - uses: robertdebock/galaxy-action@1.2.0
         with:
-          galaxy_api_key: ${{ secrets.galaxy_api_key }}
+          galaxy_api_key: ${{secrets.galaxy_api_key}}
           git_branch: master

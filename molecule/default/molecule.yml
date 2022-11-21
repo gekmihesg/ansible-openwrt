@@ -1,0 +1,45 @@
+---
+dependency:
+  name: galaxy
+  requirements-file: collections.yml
+driver:
+  name: docker
+platforms:
+  - name: instance_latest
+    image: openwrtorg/rootfs:latest
+    command: sleep infinity
+    pre_build_image: true
+    groups:
+      - openwrt
+  - name: instance_x86_64-22.03.2
+    image: openwrtorg/rootfs:x86_64-22.03.2
+    command: sleep infinity
+    pre_build_image: true
+    groups:
+      - openwrt
+  - name: instance_x86_64-21.02.5
+    image: openwrtorg/rootfs:x86_64-21.02.5
+    command: sleep infinity
+    pre_build_image: true
+    groups:
+      - openwrt
+  - name: instance_x86_64-19.07.10
+    image: openwrtorg/rootfs:x86_64-19.07.10
+    command: "sh -c 'while true; do sleep 10000; done'"
+    pre_build_image: true
+    groups:
+      - openwrt
+  - name: instance_x86-64-18.06.6
+    image: openwrtorg/rootfs:x86-64-18.06.6
+    command: "sh -c 'while true; do sleep 10000; done'"
+    pre_build_image: true
+    groups:
+      - openwrt
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .

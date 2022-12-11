@@ -4,6 +4,11 @@
     path: "{{ openwrt_remote_opkg_lists_dir }}"
   register: _opkg_lists
 
+- name: verify there are actual cache files
+  command:
+    cmd: "find {{ openwrt_remote_opkg_lists_dir }} -type f"
+  register: _opkg_list_files
+
 - name: get current system time
   command: date +%s
   register: _epoch
@@ -16,7 +21,9 @@
     name: opkg
     update_cache: true
   register: _update
-  when: not _opkg_lists.stat.exists or
+  when: not ( _opkg_lists.stat.exists and
+              _opkg_list_files.stdout is defined and
+              _opkg_list_files.stdout|length > 0) or
       _epoch.stdout|int - _opkg_lists.stat.mtime > 86400
   failed_when: not _opkg_lists.stat.exists and _update.failed
   changed_when: not _update.failed

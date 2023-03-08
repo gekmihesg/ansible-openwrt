@@ -5,6 +5,7 @@
   register: _opkg_lists
 
 - name: verify there are actual cache files
+  when: _opkg_lists.stat.exists
   command:
     cmd: "find {{ openwrt_remote_opkg_lists_dir }} -type f"
   register: _opkg_list_files

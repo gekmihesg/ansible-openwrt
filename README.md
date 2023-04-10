@@ -38,6 +38,8 @@ This role was tested successfully with:
  * OpenWRT 21.02
  * OpenWRT 22.03
 
+__Recent versions of OpenSSH's__ scp utility [silently do sftp protocol](https://forum.openwrt.org/t/ash-usr-libexec-sftp-server-not-found-when-using-scp/125772), which OpenWRT may not have installed. If your playbooks fail with "/usr/libexec/sftp-server: not found" add "ansible_scp_extra_args: -O" to your playbook variables.
+
 Requirements
 ------------
 

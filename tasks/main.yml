@@ -10,6 +10,7 @@
     ansible_ssh_use_tty: "{{ openwrt_ssh_use_tty }}"
     ansible_scp_if_ssh: "{{ openwrt_scp_if_ssh }}"
     ansible_remote_tmp: "{{ openwrt_remote_tmp }}"
+    ansible_scp_extra_args: -O
   when: "'openwrt' in group_names"
   tags: always
 

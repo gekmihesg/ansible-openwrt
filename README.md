@@ -22,6 +22,7 @@ Currently, the following modules have been implemented:
  * slurp
  * stat
  * sysctl
+ * tempfile
  * template (implicit)
  * uci (new)
  * wait\_for\_connection (implicit)

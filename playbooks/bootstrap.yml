@@ -1,0 +1,14 @@
+- hosts: openwrt
+  gather_facts: false
+  vars_prompt:
+    - name: openwrt_install_recommended_packages
+      default: true
+    - name: openwrt_wait_for_connection
+      default: true
+    - name: openwrt_wait_for_connection_timeout
+      default: 600
+  roles:
+    - prep
+  tasks:
+    - name: Ensure we have working setup by using custom fact gathering
+      gather_facts:

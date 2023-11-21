@@ -28,7 +28,7 @@
   changed_when: false
   failed_when: false
 
-- include_tasks: package.yml
+- include_tasks: main.yml
   with_dict:
     base64: coreutils-base64
     md5sum: coreutils-md5sum

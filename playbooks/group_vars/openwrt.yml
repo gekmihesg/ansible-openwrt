@@ -1,6 +1,7 @@
 ---
-openwrt_install_recommended_packages: true
+# group_vars for openwrt group
 
+openwrt_install_recommended_packages: true
 openwrt_wait_for_connection: true
 openwrt_wait_for_connection_timeout: 600
 
@@ -15,3 +16,5 @@ openwrt_ssh_use_tty: false
 openwrt_remote_tmp: /tmp
 
 openwrt_remote_opkg_lists_dir: /tmp/opkg-lists
+
+ansible_facts_modules: gekmihesg.openwrt.setup

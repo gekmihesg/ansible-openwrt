@@ -1,5 +1,5 @@
-Ansible Role: openwrt
-=====================
+Ansible Collection: gekmihesg.openwrt
+=====================================
 
 Manage OpenWRT and derivatives with Ansible but without Python.
 
@@ -26,17 +26,11 @@ Currently, the following modules have been implemented:
  * uci (new)
  * wait\_for\_connection (implicit)
 
+# TODO: enable in play with ``collections: [gekmihesg.openwrt]``, reduce need for monkey patch
 To achieve all this, some monkey patching is involved (in case you wonder about the `vars_plugins`).
 
 Compatibility
 -------------
-
-This role was tested successfully with:
- * LEDE 17.01 (manually)
- * OpenWRT 18.06
- * OpenWRT 19.07
- * OpenWRT 21.02
- * OpenWRT 22.03
 
 Requirements
 ------------

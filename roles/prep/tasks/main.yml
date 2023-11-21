@@ -14,7 +14,9 @@
   tags: always
 
 - name: install recommended packages
-  include_tasks: packages.yml
+  include_role:
+    name: pkg
+    tasks_from: recommended
   when:
     - "'openwrt' in group_names"
     - "openwrt_install_recommended_packages | bool"

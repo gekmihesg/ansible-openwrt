@@ -1,3 +1,11 @@
+# This repository is no longer maintained
+
+> [!CAUTION]
+> Please use https://github.com/ansible-collections/community.openwrt instead
+
+
+
+
 Ansible Role: openwrt
 =====================
 
